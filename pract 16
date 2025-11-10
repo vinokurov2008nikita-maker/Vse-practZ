@@ -1,0 +1,142 @@
+using System;
+
+// Задание 1: 
+class Point
+{
+    public int X, Y;
+    public Point(int x, int y) { X = x; Y = y; }
+    
+    public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y);
+    public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y);
+    
+    public override string ToString() => $"({X}, {Y})";
+}
+
+// Задание 2: 
+class Counter
+{
+    public string Name;
+    public int Value;
+    public Counter(string name, int value) { Name = name; Value = value; }
+    
+    public static Counter operator +(Counter c, int n) => new Counter(c.Name, c.Value + n);
+    
+    public int this[string key]
+    {
+        get => key == "value" ? Value : -1;
+        set { if (key == "value") Value = value; }
+    }
+    
+    public override string ToString() => $"{Name}: {Value}";
+}
+
+// Задание 3: 
+class Temperature
+{
+    public double Celsius;
+    public Temperature(double celsius) { Celsius = celsius; }
+    
+    public static bool operator >(Temperature t1, Temperature t2) => t1.Celsius > t2.Celsius;
+    public static bool operator <(Temperature t1, Temperature t2) => t1.Celsius < t2.Celsius;
+    public static bool operator ==(Temperature t1, Temperature t2) => t1.Celsius == t2.Celsius;
+    public static bool operator !=(Temperature t1, Temperature t2) => t1.Celsius != t2.Celsius;
+    
+    public override string ToString() => $"{Celsius}°C";
+    public override bool Equals(object obj) => obj is Temperature t && this == t;
+    public override int GetHashCode() => Celsius.GetHashCode();
+}
+
+// Задание 4: 
+class Book
+{
+    private string[] chapters = new string[10];
+    
+    public string this[int index]
+    {
+        get => chapters[index];
+        set => chapters[index] = value;
+    }
+    
+    public override string ToString()
+    {
+        string result = "";
+        for (int i = 0; i < chapters.Length; i++)
+            if (chapters[i] != null)
+                result += $"{i + 1}. {chapters[i]}\n";
+        return result.Trim();
+    }
+}
+
+// Задание 5: 
+class Vector
+{
+    private double[] coords;
+    public Vector(params double[] values) => coords = values;
+    
+    public static double operator *(Vector v1, Vector v2)
+    {
+        double sum = 0;
+        for (int i = 0; i < v1.coords.Length; i++)
+            sum += v1.coords[i] * v2.coords[i];
+        return sum;
+    }
+    
+    public double this[int index]
+    {
+        get => coords[index];
+        set => coords[index] = value;
+    }
+    
+    public override string ToString() => $"[{string.Join(", ", coords)}]";
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Задание 1
+        Console.WriteLine("Задание 1:");
+        var p1 = new Point(1, 2);
+        var p2 = new Point(3, 4);
+        Console.WriteLine(p1 + p2); // (4, 6)
+        Console.WriteLine(p2 - p1); // (2, 2)
+        Console.WriteLine();
+
+        // Задание 2
+        Console.WriteLine("Задание 2:");
+        var c = new Counter("Счётчик", 10);
+        c = c + 5;
+        Console.WriteLine(c); // Счётчик: 15
+        c["value"] = 20;
+        Console.WriteLine(c["value"]); // 20
+        Console.WriteLine();
+
+        // Задание 3
+        Console.WriteLine("Задание 3:");
+        var t1 = new Temperature(25);
+        var t2 = new Temperature(30);
+        Console.WriteLine(t1); // 25°C
+        Console.WriteLine(t2 > t1); // True
+        Console.WriteLine(t1 == new Temperature(25)); // True
+        Console.WriteLine();
+
+        // Задание 4
+        Console.WriteLine("Задание 4:");
+        var book = new Book();
+        book[0] = "Введение";
+        book[1] = "Глава 1";
+        Console.WriteLine(book[0]); // Введение
+        Console.WriteLine(book); // 1. Введение\n2. Глава 1
+        Console.WriteLine();
+
+        // Задание 5
+        Console.WriteLine("Задание 5:");
+        var v1 = new Vector(1, 2, 3);
+        var v2 = new Vector(4, 5, 6);
+        Console.WriteLine(v1 * v2); // 32
+        v1[1] = 10;
+        Console.WriteLine(v1); // [1, 10, 3]
+
+        Console.ReadLine();
+    }
+}
